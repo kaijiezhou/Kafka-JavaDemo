@@ -1,3 +1,4 @@
+package kjz.demo.kafka;
 import java.util.Date;
 import java.util.Properties;
 import java.util.Random;

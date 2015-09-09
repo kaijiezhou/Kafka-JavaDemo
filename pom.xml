@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>kjz.kafka</groupId>
-  <artifactId>Kafka-Demo</artifactId>
+  <groupId>kjz</groupId>
+  <artifactId>demo</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>kaijiezhou</name>
   <build>
@@ -24,7 +24,7 @@
         <archive>
           <manifest>
             <addClasspath>true</addClasspath>
-            <mainClass>ConsumerDemo</mainClass>
+            <mainClass>kjz.demo.KafkaDemo</mainClass>
           </manifest>
         </archive>
       </configuration>
@@ -34,7 +34,7 @@
   <configuration>
     <archive>
       <manifest>
-        <mainClass>ConsumerDemo</mainClass>
+        <mainClass>kjz.demo.KafkaDemo</mainClass>
       </manifest>
     </archive>
     <descriptorRefs>
@@ -70,6 +70,20 @@
         <artifactId>log4j</artifactId>
         <version>1.2.17</version>
     </dependency>
-    
+    <dependency>
+    	<groupId>org.apache.spark</groupId>
+    	<artifactId>spark-streaming-kafka_2.10</artifactId>
+    	<version>1.4.1</version>
+	</dependency>
+	<dependency>
+    	<groupId>org.apache.spark</groupId>
+    	<artifactId>spark-core_2.10</artifactId>
+    	<version>1.4.1</version>
+	</dependency>
+	<dependency>
+    	<groupId>org.apache.spark</groupId>
+    	<artifactId>spark-streaming_2.10</artifactId>
+    	<version>1.4.1</version>
+	</dependency>
   </dependencies>
 </project>

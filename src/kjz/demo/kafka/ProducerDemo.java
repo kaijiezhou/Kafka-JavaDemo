@@ -10,25 +10,23 @@ import kafka.producer.ProducerConfig;
 
 public class ProducerDemo {
 	private String brokerList;
-	private String msg;
-	public ProducerDemo(String brokerList,String msg){
+	//private String msg;
+	private Producer<String, String> producer;
+	public ProducerDemo(String brokerList){
 		this.brokerList=brokerList;
-		this.msg=msg;
-	}
-	public void runDemo(long events){
-		//Random rnd = new Random();
-		 
-        Properties props = new Properties();
+		Properties props = new Properties();
         props.put("metadata.broker.list", brokerList);
         props.put("serializer.class", "kafka.serializer.StringEncoder");
         //props.put("partitioner.class", "example.producer.SimplePartitioner");
         props.put("request.required.acks", "1");
- 
         ProducerConfig config = new ProducerConfig(props);
- 
-        Producer<String, String> producer = new Producer<String, String>(config);
-        KeyedMessage<String, String> data = new KeyedMessage<String, String>("test", "key", msg);
+        producer = new Producer<String, String>(config);
+		//this.msg=msg;
+	}
+	public void runDemo(String topic, String key,String msg){
+        KeyedMessage<String, String> data = new KeyedMessage<String, String>(topic, key, msg);
         producer.send(data);
+		//Random rnd = new Random();
         /*for (long nEvents = 0; nEvents < events; nEvents++) { 
                long runtime = new Date().getTime();  
                String ip = "92.168.2." + rnd.nextInt(255); 
@@ -36,6 +34,10 @@ public class ProducerDemo {
                KeyedMessage<String, String> data = new KeyedMessage<String, String>("test", ip, msg);
                producer.send(data);
         }*/
-        producer.close();
+        //producer.close();
     }
+	public void Close_Producer(){
+		if (producer != null)
+			producer.close();
+	}
 }

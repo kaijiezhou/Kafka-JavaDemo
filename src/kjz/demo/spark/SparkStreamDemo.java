@@ -2,6 +2,9 @@ package kjz.demo.spark;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
@@ -63,6 +66,7 @@ public class SparkStreamDemo {
 	    	          return i1 + i2;
 	    	        }
 	    	      });
+	    wordCounts.print();
 	    ctx.start();
 	    ctx.awaitTermination();
 	}

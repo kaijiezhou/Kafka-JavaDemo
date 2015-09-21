@@ -23,19 +23,25 @@ public class ProducerDemo {
         producer = new Producer<String, String>(config);
 		//this.msg=msg;
 	}
-	public void runDemo(String topic, String key,String msg){
+	public void runListenerDemo(String topic, String key,String msg){
         KeyedMessage<String, String> data = new KeyedMessage<String, String>(topic, key, msg);
         producer.send(data);
-		//Random rnd = new Random();
-        /*for (long nEvents = 0; nEvents < events; nEvents++) { 
+		
+    }
+	public void runGeneraterDemo(int n){
+		Random rnd = new Random();
+		System.out.println("Begin sending msges...");
+        for (long nEvents = 0; nEvents < n; nEvents++) { 
                long runtime = new Date().getTime();  
                String ip = "92.168.2." + rnd.nextInt(255); 
                String msg = runtime + ", www.example.com," + ip; 
-               KeyedMessage<String, String> data = new KeyedMessage<String, String>("test", ip, msg);
+               String topic="test"+rnd.nextInt(5);
+               KeyedMessage<String, String> data = new KeyedMessage<String, String>(topic, ip, msg);
                producer.send(data);
-        }*/
-        //producer.close();
-    }
+               System.out.println("[producer] Message sent : "+topic+", "+msg);
+        }
+        producer.close();
+	}
 	public void Close_Producer(){
 		if (producer != null)
 			producer.close();

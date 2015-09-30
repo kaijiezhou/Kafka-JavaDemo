@@ -34,7 +34,12 @@ public class ConsumerDemo {
 		prop.put("auto.commit.interval.ms", "1000");
 		return new ConsumerConfig(prop);
 	}
-	public void shutdown(){
+	public void shutdown(int delay){
+		try {
+			Thread.sleep(delay);
+		} catch (InterruptedException e1) {
+			e1.printStackTrace();
+		}
 		if(consumer!=null) consumer.shutdown();
 		if(executor!=null)	executor.shutdown(); 
 		try{
@@ -46,21 +51,26 @@ public class ConsumerDemo {
 		}
 	}
 	
-	public void run(int a_numThreads){
+	public void run(int numTopics, int a_numThreads){
 		Map<String, Integer> topicCountMap=new HashMap<>();
-		topicCountMap.put(topic, new Integer(a_numThreads));
+		for(int i=0;i<numTopics;i++){
+			topicCountMap.put(topic+i, new Integer(a_numThreads));
+		}
 		Map<String, List<KafkaStream<byte[], byte[]>>> consumerMap=consumer.createMessageStreams(topicCountMap);
-		List<KafkaStream<byte[], byte[]>> streams=consumerMap.get(topic);
-		/*
-		 * Launch all the threads
-		 * */
-		executor=Executors.newFixedThreadPool(a_numThreads);
-		/*
-		 * Create an object to consume the message
-		 * */
-		int threadNum=0;
-		for(final KafkaStream stream:streams){
-			executor.submit(new MultiThreadConsumer(stream, threadNum));
+		for(int i=0;i<numTopics;i++){
+			List<KafkaStream<byte[], byte[]>> streams=consumerMap.get(topic+i);
+			/*
+			 * Launch all the threads
+			 * */
+			executor=Executors.newFixedThreadPool(a_numThreads);
+			/*
+			 * Create an object to consume the message
+			 * */
+			int threadNum=0;
+			for(final KafkaStream<byte[],byte[]> stream:streams){
+				executor.submit(new MultiThreadConsumer(stream, threadNum));
+				threadNum++;
+			}
 		}
 	}
 	public void runSingleConsumer(){
@@ -77,4 +87,21 @@ public class ConsumerDemo {
 		
 	}
 	
+}
+
+class MultiThreadConsumer implements Runnable {
+    private KafkaStream m_stream;
+    private int m_threadNumber;
+ 
+    public MultiThreadConsumer(KafkaStream a_stream, int a_threadNumber) {
+        m_threadNumber = a_threadNumber;
+        m_stream = a_stream;
+    }
+ 
+    public void run() {
+        ConsumerIterator<byte[], byte[]> it = m_stream.iterator();
+        while (it.hasNext())
+            System.out.println("Thread " + m_threadNumber + ": " + new String(it.next().message()));
+        System.out.println("Shutting down Thread: " + m_threadNumber);
+    }
 }

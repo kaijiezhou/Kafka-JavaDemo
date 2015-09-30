@@ -7,6 +7,8 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import org.apache.commons.configuration.INIConfiguration;
+
 import kjz.demo.kafka.ConsumerDemo;
 import kjz.demo.kafka.ProducerDemo;
 import kjz.demo.spark.SparkStreamDemo;
@@ -15,26 +17,23 @@ public class KafkaDemo {
 	public static void main(String[] args) throws IOException {
 		switch(args[0]){
 		case "consumer":
-			/* String zooKeeper = args[0];
-	        String groupId = args[1];
-	        String topic = args[2];*/
 			String zooKeeper=args[1];
 			String groupId="group0";
-			String topic="test1";
-	        //int threads = Integer.parseInt(args[3]);
-			//SparkStreamDemo sparkStreamDemo = new SparkStreamDemo(brokerList,topic);
-			//sparkStreamDemo.runTerminalDemo();
-	        ConsumerDemo example = new ConsumerDemo(zooKeeper, groupId, topic);
-	        //example.run(threads);
-	        example.runSingleConsumer();
-	 /*
-	        try {
-	            Thread.sleep(10000);
-	        } catch (InterruptedException ie) {
-	 
-	        }
-	 */
-	        //example.shutdown();
+			String topic="test";
+			switch(args[2]){
+			case "single":
+				ConsumerDemo example = new ConsumerDemo(zooKeeper, groupId, topic+"1");
+				example.runSingleConsumer();
+				break;
+			case "multi":
+				int num = Integer.parseInt(args[3]);
+				ConsumerDemo demoThread = new ConsumerDemo(zooKeeper, groupId, topic);
+				demoThread.run(num,3);
+				//demoThread.shutdown(10000000);
+				break;
+			default:
+				System.out.println("Choose your mode:[single], or [multi] [num]");
+			}
 	        break;
 		case "producer":
 			String brokerList =args[1];
